@@ -1,67 +1,157 @@
 <template>
-  <div>
-    <b-navbar toggleable="lg" type="dark" variant="info">
-      <b-container>
-      <b-navbar-brand @click="$router.push({name:'Home'})">ginBlog</b-navbar-brand>
 
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+  <div id="components-layout-demo-basic">
 
-      <b-collapse id="nav-collapse" is-nav>
-<!--        <b-navbar-nav>-->
-<!--          <b-nav-item href="#">Link</b-nav-item>-->
-<!--          <b-nav-item href="#" disabled>Disabled</b-nav-item>-->
-<!--        </b-navbar-nav>-->
+    <a-layout>
+      <a-layout-header>
+        <div>
+          <a-row>
+            <a-col :span="6">
+              <h1>BlogsLogo</h1>
+            </a-col>
+            <a-col :span="6">
+              <a-input-search  placeholder="input search text" @search="onSearch" />
+            </a-col>
+            <a-col :span="6">
+              <a-avatar :size="37">
+                <a-icon type="undo" />
+              </a-avatar>
+            </a-col>
+            <a-col :span="4">
+              <h1>十八岁的我们</h1>
+            </a-col>
 
-        <!-- Right aligned nav items -->
-        <b-navbar-nav class="ml-auto">
-<!--          <b-nav-form>-->
-<!--            <b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>-->
-<!--            <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>-->
-<!--          </b-nav-form>-->
+<!--            <a-dropdown  v-if="userInfo">-->
+<!--              <a class="ant-dropdown-link" @click="e => e.preventDefault()">-->
 
-          <b-nav-item-dropdown right v-if="userInfo">
-            <!-- Using 'button-content' slot -->
-            <template v-slot:button-content>
-              <em>{{userInfo.name}}</em>
-            </template>
-            <b-dropdown-item @click="$router.push({name:'profile'})">个人主页</b-dropdown-item>
-            <b-dropdown-item @click="logout">退出</b-dropdown-item>
-          </b-nav-item-dropdown>
-          <div v-if="!userInfo">
-            <b-nav-item
-              v-if="$route.name != 'login'"
-              @click="$router.replace({name: 'login'})"
-            >登录</b-nav-item>
-            <b-nav-item
-              v-if="$route.name != 'register'"
-              @click="$router.replace({name: 'register'})"
-            >注册</b-nav-item>
-          </div>
-        </b-navbar-nav>
-      </b-collapse>
-      </b-container>
-    </b-navbar>
+<!--              <a-col :span="2">-->
+<!--                <a-avatar :size="37">-->
+<!--                  <a-icon  slot="icon" type="user" />-->
+<!--                </a-avatar>-->
+
+<!--                <a-menu slot="overlay">-->
+<!--                  <a-menu-item>-->
+<!--                    <a @click="gologin">退出</a>-->
+<!--                  </a-menu-item>-->
+<!--                  <a-menu-item>-->
+<!--                    <a  @click="goregister">切换账号</a>-->
+<!--                  </a-menu-item>-->
+<!--                  <a-menu-item>-->
+<!--                    <a href="javascript:;">个人空间</a>-->
+<!--                  </a-menu-item>-->
+<!--                </a-menu>-->
+<!--              </a-col>-->
+<!--              </a>-->
+<!--            </a-dropdown>-->
+            <a-dropdown  v-if="userInfo">
+              <a class="ant-dropdown-link" @click="e => e.preventDefault()">
+                <a-col :span="1" >
+                  <a-avatar size="37">
+                  <a-icon  slot="icon" type="user" />
+                </a-avatar>
+                </a-col>
+                <a-col :span="1"><em class="userInfoSz">{{ userInfo.name }}</em></a-col>
+              </a>
+              <a-menu slot="overlay">
+                    <a-menu-item>
+                      <a @click="logouts">退出</a>
+                    </a-menu-item>
+                    <a-menu-item>
+                      <a  @click="goregister">切换账号</a>
+                    </a-menu-item>
+                    <a-menu-item>
+                      <a href="javascript:;">个人空间</a>
+                    </a-menu-item>
+              </a-menu>
+            </a-dropdown>
+
+            <a-col :span="2" v-if="!userInfo" >
+              <a-button type="primary" @click="gologin" v-if="$route.name != 'login'">
+                IN
+
+              </a-button>
+              <a-button type="primary" @click="goregister" v-if="$route.name != 'register'">
+                OUT</a-button>
+            </a-col>
+
+          </a-row>
+        </div>
+      </a-layout-header>
+    </a-layout>
   </div>
+
 </template>
 
 <script>
-// 方式一： map函数
-import { mapState, mapActions } from 'vuex';
+// import { mapState, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
+// import storageService from '../../service/storageService';
 
-export default {
-  computed: mapState({
-    userInfo: (state) => state.userModule.userInfo,
-  }),
-  methods: mapActions('userModule', ['logout']),
-};
-// 方式二
-// export default {
+// computed: {
 //   userInfo() {
-//     return this.$store.state.userModule.userInfo;
+//     return this.$store.state.userModules.userInfo; // 基础用法前端用户信息=实时更新
 //   },
-// };
+// },
+// computed: mapState({
+//   userInfo: state => state.userModules.userInfo,
+// }), // vuex mapState 用法前端用户信息=实时更新
+export default {
+  name: 'navbar',
+  data() {
+    return {
+      // userInfo: this.userInfo,
+    };
+  },
+  computed: {
+    userInfo() {
+      return JSON.parse(this.$store.state.userModules.userInfo); // 基础用法前端用户信息=实时更新
+    },
+  },
+  // computed: mapState({ userInfo: 'userInfo' }), // vuex mapState 用法前端用户信息=实时更新
+  methods: {
+    ...mapActions(['logouts']), // 用户退出
+    gologin() {
+      this.$router.replace({ name: 'login' });
+    },
+    goregister() {
+      this.$router.push({ name: 'register' });
+    },
+  },
+};
+
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 
+  #components-layout-demo-basic {
+    text-align: center;
+  }
+  #components-layout-demo-basic .ant-layout-header,
+  #components-layout-demo-basic .ant-layout-footer {
+    background: #7dbcea;
+    color: #fff;
+  }
+  .userInfoSz {
+    font-size: 27px;
+  }
+  /*#components-layout-demo-basic .ant-layout-sider {*/
+  /*  background: #3ba0e9;*/
+  /*  color: #fff;*/
+  /*  line-height: 120px;*/
+  /*}*/
+  /*#components-layout-demo-basic .ant-layout-content {*/
+  /*  background: rgba(16, 142, 233, 1);*/
+  /*  color: #fff;*/
+  /*  min-height: 120px;*/
+  /*  line-height: 120px;*/
+  /*}*/
+  #components-layout-demo-basic > .ant-layout {
+    margin-bottom: 48px;
+  }
+  #components-layout-demo-basic > .ant-layout:last-child {
+    margin: 0;
+  }
+  #components-layout-demo-basic > .a-input-search{
+    width: 30px;
+  }
 </style>

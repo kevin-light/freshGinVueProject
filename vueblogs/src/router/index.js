@@ -21,6 +21,25 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
   },
   ...userRoutes,
+  // {
+  //   path: '/register',
+  //   name: 'register',
+  //   component: () => import('../views/register/Register.vue'),
+  // },
+  // {
+  //   path: '/login',
+  //   name: 'login',
+  //   component: () => import('../views/login/Login.vue'),
+  // },
+  //
+  // {
+  //   path: '/profile',
+  //   name: 'profile',
+  //   meta: {
+  //     auth: true,
+  //   },
+  //   component: () => import('@/views/profile/Profile.vue'),
+  // },
 ];
 
 const router = new VueRouter({
@@ -29,15 +48,15 @@ const router = new VueRouter({
   routes,
 });
 
-// https://router.vuejs.org/zh/guide/advanced/navigation-guards.html
 router.beforeEach((to, from, next) => {
-  if (to.meta.auth) { // 判断用户是否需要登录 = 即将要进入的目标 路由对象
-    // 判断用户是否登录
+  if (to.meta.auth) { // 判断是否需要登录
+    // 判断用户token是否登录
     if (store.state.userModule.token) {
-      // 判断token有效性（有没有过期，需要后台发token的时候带上有效时间，过期重新请求
+      // 这里还要判断token 的有效性 比如有没有过期 需要后台发放token 的时候 带上token 的有效期，
+      // 如果 token 无效 需要 请求token
       next();
     } else {
-    // 跳转登录
+      // 跳转登录
       router.push({ name: 'login' });
     }
   } else {

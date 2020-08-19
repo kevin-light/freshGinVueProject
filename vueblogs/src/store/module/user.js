@@ -1,13 +1,13 @@
 import storageService from '@/service/storageService';
 import userService from '@/service/userService';
 
-const userModule = {
-  namespaced: true, // 开启namespaced
+const userModules = {
+  namespace: true,
   state: {
     token: storageService.get(storageService.USER_TOKEN),
-    // userInfo: JSON.parse(storageService.get(storageService.USER_INFO)),
-    userInfo: storageService.get(storageService.USER_INFO) ? JSON.parse(storageService.get(storageService.USER_INFO)) : null, //eslint-disable-line
+    userInfo: storageService.get(storageService.USER_INFO),
   },
+
   mutations: {
     SET_TOKEN(state, token) {
       // 更新本地缓存
@@ -23,9 +23,9 @@ const userModule = {
     },
   },
   actions: {
-    register(context, { name, telephone, password }) {
+    registers(context, { Name, Telephone, Password }) {
       return new Promise((resolve, reject) => {
-        userService.register({ name, telephone, password }).then((res) => {
+        userService.register({ Name, Telephone, Password }).then((res) => {
           // 保存token
           context.commit('SET_TOKEN', res.data.data.token);
           return userService.info();
@@ -38,9 +38,9 @@ const userModule = {
         });
       });
     },
-    login(context, { telephone, password }) {
+    logins(context, { Telephone, Password }) {
       return new Promise((resolve, reject) => {
-        userService.login({ telephone, password }).then((res) => {
+        userService.login({ Telephone, Password }).then((res) => {
           // 保存token
           context.commit('SET_TOKEN', res.data.data.token);
           return userService.info();
@@ -53,16 +53,16 @@ const userModule = {
         });
       });
     },
-    logout({ commit }) {
-      // 清除 token
+    logouts({ commit }) {
+      // 清除token
       commit('SET_TOKEN', '');
       storageService.set(storageService.USER_TOKEN, '');
-      // 清用户信息
+      // 清除用户信息
       commit('SET_USERINFO', '');
       storageService.set(storageService.USER_INFO, '');
+
       window.location.reload();
     },
   },
 };
-
-export default userModule;
+export default userModules;

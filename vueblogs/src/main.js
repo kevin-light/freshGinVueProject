@@ -1,23 +1,42 @@
 import Vue from 'vue';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
-import Vuelidate from 'vuelidate';
+import {
+  Button, Layout, Menu, Row, Col, Form, Input, Select, Checkbox, Icon, Tooltip, Dropdown, Avatar,
+  List,
+} from 'ant-design-vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+import Vuex from 'vuex';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-import './assets/scss/index.scss';
+
+// Vue.use(Vuelidate);
+Vue.use(VueAxios, axios);
+Vue.use(Vuex);
+
+Vue.component(Button.name, Button);
+Vue.component(Form.name, Form);
+Vue.component(Row.name, Row);
+Vue.component(Layout.name, Layout);
+Vue.component(Icon.name, Icon);
+Vue.component(Menu.name, Menu);
+Vue.component(Menu.Item.name, Menu.Item);
+Vue.use(Button);
+Vue.use(Menu);
+Vue.use(Layout);
+Vue.use(Row);
+Vue.use(Col);
+Vue.use(Form);
+Vue.use(Input);
+Vue.use(Checkbox);
+Vue.use(Select);
+Vue.use(Icon);
+Vue.use(Tooltip);
+Vue.use(Dropdown);
+Vue.use(Avatar);
+Vue.use(List);
 
 Vue.config.productionTip = false;
-Vue.use(Vuelidate);
-
-// Install BootstrapVue; Vuelidate; axios; vue-axios
-Vue.use(BootstrapVue);
-// Optionally install the BootstrapVue icon components plugin
-Vue.use(IconsPlugin);
-// axios; vue-axios
-Vue.use(VueAxios, axios);
 
 new Vue({
   router,

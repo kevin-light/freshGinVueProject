@@ -2,7 +2,7 @@ const userRoutes = [
   {
     path: '/register',
     name: 'register',
-    component: () => import('@/views/register/Register.vue'),
+    component: () => import('@/views/register/Register.vue'), // 组件的 匿名函数异步惰性加载
   },
   {
     path: '/login',
@@ -16,6 +16,11 @@ const userRoutes = [
       auth: true,
     },
     component: () => import('@/views/profile/Profile.vue'),
+  },
+  {
+    path: '/demo',
+    name: 'demo',
+    component: () => import('@/views/Demotesting.vue'),
   },
 ];
 
